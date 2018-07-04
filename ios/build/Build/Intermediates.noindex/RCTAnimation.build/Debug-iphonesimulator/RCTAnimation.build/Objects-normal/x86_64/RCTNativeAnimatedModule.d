@@ -1,0 +1,33 @@
+dependencies: \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/node_modules/react-native/Libraries/NativeAnimation/RCTNativeAnimatedModule.m \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/node_modules/react-native/Libraries/NativeAnimation/RCTNativeAnimatedModule.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTEventDispatcher.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTEventEmitter.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUIManager.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTRootView.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTViewManager.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTConvert.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAnimationType.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBorderStyle.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLog.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUtils.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTPointerEvents.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTTextDecorationLineType.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/UIView+React.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTComponent.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUIManagerObserverCoordinator.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUIManagerUtils.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/node_modules/react-native/Libraries/NativeAnimation/Nodes/RCTValueAnimatedNode.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/node_modules/react-native/Libraries/NativeAnimation/Nodes/RCTAnimatedNode.h \
+  /Users/vijaybala/Desktop/markus-scanner-app/MES/node_modules/react-native/Libraries/NativeAnimation/RCTNativeAnimatedNodesManager.h

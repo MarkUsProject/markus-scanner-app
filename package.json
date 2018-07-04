@@ -1,26 +1,27 @@
 {
-  "name": "markus-scanner-app",
-  "version": "0.1.0",
+  "name": "MES",
+  "version": "0.0.1",
   "private": true,
-  "devDependencies": {
-    "react-native-scripts": "1.14.0",
-    "jest-expo": "~27.0.0",
-    "react-test-renderer": "16.3.1"
-  },
-  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "react-native-scripts start",
-    "eject": "react-native-scripts eject",
-    "android": "react-native-scripts android",
-    "ios": "react-native-scripts ios",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
-    "expo": "^27.0.1",
-    "react": "16.3.1",
-    "react-native": "~0.55.2"
+    "babel-preset-expo": "^4.0.0",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-native": "^0.51.0",
+    "react-native-camera": "^1.1.4",
+    "react-native-fs": "^2.10.14",
+    "react-native-mail": "^3.0.6"
+  },
+  "devDependencies": {
+    "babel-jest": "23.0.1",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "23.1.0",
+    "react-test-renderer": "16.3.1"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }
