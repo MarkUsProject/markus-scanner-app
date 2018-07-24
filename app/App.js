@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MainScanner from './screens/MainScanner';
-import CourseInfoEntry from './screens/CourseInfoEntry';
+import InfoEntry from './screens/InfoEntry';
 import {
   Scene,
   Router,
@@ -12,7 +12,7 @@ export default class App extends Component {
     return (
       <Router>
         <Stack key="root">
-          <Scene key="courseInfoEntry" component={CourseInfoEntry} hideNavBar="true"/>
+          <Scene key="InfoEntry" component={InfoEntry} hideNavBar="true"/>
           <Scene key="mainScanner" component={MainScanner} hideNavBar="true"/>
         </Stack>
       </Router>
