@@ -30,11 +30,11 @@ export const generalStyles = StyleSheet.create({
       justifyContent: 'space-between',
       backgroundColor: 'rgba(1,1,1,0)'
   },
-  buttons: {
+  buttonBar: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
       margin: 20,
+      justifyContent: 'space-between'
   },
   label: {
       color: "white",

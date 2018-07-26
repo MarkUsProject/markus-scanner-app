@@ -11,10 +11,10 @@ import {
   View,
   Vibration,
   Image,
-  Linking,
 } from 'react-native';
 import Mailer from 'react-native-mail';
 import { RNCamera } from 'react-native-camera';
+import { Actions } from 'react-native-router-flux';
 
 export default class Scanner extends Component {
 
@@ -30,7 +30,7 @@ export default class Scanner extends Component {
       searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
       infoCounter: 0
     };
-    this.dataStore = {"TESTQRCODE": "TESTBARCODE"};
+    this.dataStore = {};
   }
 
   onBarCodeRead(data) {
@@ -65,7 +65,7 @@ export default class Scanner extends Component {
 
     let sendMail = path => {
       Mailer.mail({
-        subject: '',
+        subject: this.props.courseCode + " Exam Version Info",
         recipients: [],
         ccRecipients: [],
         bccRecipients: [],
@@ -88,14 +88,17 @@ export default class Scanner extends Component {
       <View style={generalStyles.container}>
         <View style={generalStyles.outter}>
           <View style={generalStyles.logo}>
-            <Image source={require('../../imgs/markus_logo.png')}/>
+            <Image source={require('../../imgs/markus_logo_bw.png')}/>
           </View>
-          <View style={generalStyles.buttons}>
+          <View style={generalStyles.buttonBar}>
             <View>
-              <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="white"/>
+              <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="#A3CB38"/>
             </View>
             <View>
-              <Button onPress={this.onManualEntry.bind(this)} title="Manual" color="white"/>
+              <Button onPress={Actions.InfoEntry} title="New" color="blue"/>
+            </View>
+            <View>
+              <Button onPress={this.onManualEntry.bind(this)} title="Manual" color="#12CBC4"/>
             </View>
           </View>
         </View>
@@ -110,7 +113,7 @@ export default class Scanner extends Component {
         />
         {/* Mask around Scanner View */}
         <View style={maskStyles.maskOutter}>
-          <View style={[{ flex: this.maskRowHeight, width: '100%' }, maskStyles.maskFrame]} />
+          <View style={[{ flex: this.maskRowHeight, width: '100%'}, maskStyles.maskFrame]}/>
             <View style={[{ flex: 30, flexDirection: 'row' }]}>
               <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
               <View style={maskStyles.maskInner}/>
