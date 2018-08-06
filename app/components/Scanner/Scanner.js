@@ -1,29 +1,27 @@
 'use strict';
 import React, { Component } from 'react';
 import * as constants from './constants';
-import * as utils from './utils';
+import * as utils from '../../utils';
+import { generalStyles, maskStyles } from './styles';
 import {
   Alert,
   Button,
-  AppRegistry,
   Dimensions,
-  StyleSheet,
   Text,
   View,
   Vibration,
   Image,
-  Linking,
-  TextInput
 } from 'react-native';
 import Mailer from 'react-native-mail';
 import { RNCamera } from 'react-native-camera';
+import { Actions } from 'react-native-router-flux';
 
-export default class App extends Component {
+export default class Scanner extends Component {
 
   constructor(props) {
     super(props);
     const {height, width } = Dimensions.get('window');
-    this.maskRowHeight = Math.round((height - 300) / 20);
+    this.maskRowHeight = Math.round((height - 300) / 19);
     this.maskColWidth = (width - 300) / 2;
     this.previous = null;
 
@@ -32,7 +30,7 @@ export default class App extends Component {
       searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
       infoCounter: 0
     };
-    this.dataStore = {"TESTQRCODE": "TESTBARCODE"};
+    this.dataStore = {};
   }
 
   onBarCodeRead(data) {
@@ -40,7 +38,7 @@ export default class App extends Component {
   }
 
   onManualEntry(type, code) {
-    Alert.alert('Button Please Show Up!');
+    Alert.alert('Button Please Show Up!!!');
   }
 
   processCodes(type, code) {
@@ -67,7 +65,7 @@ export default class App extends Component {
 
     let sendMail = path => {
       Mailer.mail({
-        subject: '',
+        subject: this.props.courseCode + " Exam Version Info",
         recipients: [],
         ccRecipients: [],
         bccRecipients: [],
@@ -87,17 +85,20 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.outter}>
-          <View style={styles.logo}>
-            <Image source={require('./imgs/markus_logo.png')}/>
+      <View style={generalStyles.container}>
+        <View style={generalStyles.outter}>
+          <View style={generalStyles.logo}>
+            <Image source={require('../../imgs/markus_logo_bw.png')}/>
           </View>
-          <View style={styles.buttons}>
+          <View style={generalStyles.buttonBar}>
             <View>
-              <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="white"/>
+              <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="#A3CB38"/>
             </View>
             <View>
-              <Button onPress={this.onManualEntry.bind(this)} title="Manual" color="white"/>
+              <Button onPress={Actions.InfoEntry} title="New" color="blue"/>
+            </View>
+            <View>
+              <Button onPress={this.onManualEntry.bind(this)} title="Manual" color="#12CBC4"/>
             </View>
           </View>
         </View>
@@ -105,14 +106,14 @@ export default class App extends Component {
             ref={ref => {
               this.camera = ref;
             }}
-            style = {styles.preview}
+            style = {generalStyles.preview}
             onBarCodeRead={this.onBarCodeRead.bind(this)}
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
         />
         {/* Mask around Scanner View */}
         <View style={maskStyles.maskOutter}>
-          <View style={[{ flex: this.maskRowHeight, width: '100%' }, maskStyles.maskFrame]} />
+          <View style={[{ flex: this.maskRowHeight, width: '100%'}, maskStyles.maskFrame]}/>
             <View style={[{ flex: 30, flexDirection: 'row' }]}>
               <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
               <View style={maskStyles.maskInner}/>
@@ -120,87 +121,10 @@ export default class App extends Component {
             </View>
           <View style={[{ flex: this.maskRowHeight, width: '100%', alignItems: 'center'}, maskStyles.maskFrame]}>
             <Text style={{color: 'white', marginTop: 20}}> Total: {this.state.infoCounter} </Text>
-            <Text style={styles.label}>{this.state.searchLabel}</Text>
+            <Text style={generalStyles.label}>{this.state.searchLabel}</Text>
           </View>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black'
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center'
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    padding: 15,
-    paddingHorizontal: 20,
-    alignSelf: 'center',
-    margin: 20
-  },
-  outter: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: '100%',
-    left: 0,
-    zIndex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(1,1,1,0)'
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 20,
-  },
-  label: {
-    color: "white",
-    marginVertical: 5,
-    zIndex: 100,
-  },
-  input: {
-    height: 40, 
-    borderColor: 'gray', 
-    borderWidth: 1
-  },
-  logo: {
-    width: '100%',
-    alignItems: 'center',
-    marginVertical: 100
-  }
-});
-
-// CSS styling to fill space around 300 by 300 transparent Camera View
-const maskStyles = StyleSheet.create({
-  maskInner: {
-    width: 300,
-    backgroundColor: 'transparent',
-  },
-  maskOutter: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  maskFrame: {
-    backgroundColor: 'rgba(1,1,1,0.6)',
-  }
-})
-
-
-
-AppRegistry.registerComponent('App', () => App);
