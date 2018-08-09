@@ -9,7 +9,9 @@ export default class MainScanner extends Component {
 
   render() {
     return (
-      <Scanner courseCode={this.props.courseCode}/>
+      <Scanner courseCode={this.props.courseCode}
+               title={this.props.title}
+               location={this.props.location}/>
     )
   }
 }
