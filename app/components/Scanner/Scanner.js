@@ -26,9 +26,9 @@ export default class Scanner extends Component {
     const {height, width } = Dimensions.get('window');
     this.maskRowHeight = Math.round((height - 300) / 19);
     this.maskColWidth = (width - 300) / 2;
-    this.previous = null;
 
     this.state = {
+      previous: null,
       searchCode: constants.QRCODE_TYPE,
       searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
       infoCounter: 0,
@@ -56,8 +56,8 @@ export default class Scanner extends Component {
   }
 
   resetScanner() {
-    this.previous = null;
     this.setState({
+      previous: null,
       searchCode: constants.QRCODE_TYPE,
       searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
     });
@@ -87,19 +87,19 @@ export default class Scanner extends Component {
 
   processCodes(type, code) {
     if (type == this.state.searchCode && type == constants.QRCODE_TYPE) {
-      this.previous = code;
       this.setState({
+        previous: code,
         searchCode: constants.BARCODE_TYPE,
         searchLabel: constants.SEARCH_LABEL_TCARD_CODE
       });
       Vibration.vibrate();
     } else if (type == this.state.searchCode && type == constants.BARCODE_TYPE) {
-      this.addRecord(this.previous, code);
+      this.addRecord(this.state.previous, code);
       this.setState({
         searchCode: constants.QRCODE_TYPE,
         searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
+        previous: null
       });
-      this.previous = null;
     }
   }
 
@@ -185,16 +185,19 @@ export default class Scanner extends Component {
           <View style={generalStyles.outter}>
             <View style={generalStyles.logo}>
               <Image source={require('../../imgs/markus_logo_bw.png')}/>
+              { this.state.previous && 
+                <Button onPress={this.resetScanner.bind(this)} title="Reset" color="#d63031"/>
+              }
             </View>
             <View style={generalStyles.buttonBar}>
               <View>
-                <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="#A3CB38"/>
+                <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="white"/>
               </View>
               <View>
-                <Button onPress={Actions.InfoEntry} title="New" color="blue"/>
+                <Button onPress={Actions.InfoEntry} title="New" color="white"/>
               </View>
               <View>
-                <Button onPress={this.toggleModalVisible.bind(this)} title="Manual" color="#12CBC4"/>
+                <Button onPress={this.toggleModalVisible.bind(this)} title="Manual" color="white"/>
               </View>
             </View>
           </View>
