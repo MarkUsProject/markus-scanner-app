@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as constants from './constants';
 import * as utils from '../../utils';
-import { generalStyles, maskStyles } from './styles';
+import { generalStyles, maskStyles, modalStyles } from './styles';
 import {
   Alert,
   Button,
@@ -11,6 +11,9 @@ import {
   View,
   Vibration,
   Image,
+  Modal,
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
 import Mailer from 'react-native-mail';
 import { RNCamera } from 'react-native-camera';
@@ -28,7 +31,12 @@ export default class Scanner extends Component {
     this.state = {
       searchCode: constants.QRCODE_TYPE,
       searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
-      infoCounter: 0
+      infoCounter: 0,
+      modalVisible: false,
+      miQRBorderColor: constants.DEFAULT_BORDER_COLOR,
+      miStudentNumberBorderColor: constants.DEFAULT_BORDER_COLOR,
+      miQRCode: '',
+      miStudentNumber: ''
     };
     this.dataStore = {};
   }
@@ -37,8 +45,44 @@ export default class Scanner extends Component {
     this.processCodes(data.type, data.data);
   }
 
-  onManualEntry(type, code) {
-    Alert.alert('Button Please Show Up!!!');
+  toggleModalVisible() {
+    if (this.state.modalVisible) {
+      this.setState({miQRBorderColor: constants.DEFAULT_BORDER_COLOR});
+      this.setState({miStudentNumberBorderColor: constants.DEFAULT_BORDER_COLOR});
+    }
+    this.setState({
+      modalVisible: !this.state.modalVisible
+    });
+  }
+
+  resetScanner() {
+    this.previous = null;
+    this.setState({
+      searchCode: constants.QRCODE_TYPE,
+      searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
+    });
+  }
+
+  // Adds record to datastore and increments the counter
+  addRecord(QRCode, studentNumber) {
+    this.dataStore[QRCode] = studentNumber;
+    this.setState({
+      infoCounter: this.state.infoCounter + 1
+    })
+  }
+
+  onManualEntry() {
+    if (!this.state.miQRCode || !this.state.miStudentNumber) {
+      this.setState({
+        miQRBorderColor: this.state.miQRCode ? constants.DEFAULT_BORDER_COLOR : constants.ERROR_BORDER_COLOR,
+        miStudentNumberBorderColor: this.state.miStudentNumber ? constants.DEFAULT_BORDER_COLOR : constants.ERROR_BORDER_COLOR
+      });
+      return;
+    }
+    
+    this.addRecord(this.state.miQRCode, this.state.miStudentNumber);
+    this.resetScanner();
+    this.toggleModalVisible();
   }
 
   processCodes(type, code) {
@@ -50,11 +94,10 @@ export default class Scanner extends Component {
       });
       Vibration.vibrate();
     } else if (type == this.state.searchCode && type == constants.BARCODE_TYPE) {
-      this.dataStore[this.previous] = code;
+      this.addRecord(this.previous, code);
       this.setState({
         searchCode: constants.QRCODE_TYPE,
         searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
-        infoCounter: this.state.infoCounter + 1
       });
       this.previous = null;
     }
@@ -85,43 +128,97 @@ export default class Scanner extends Component {
 
   render() {
     return (
-      <View style={generalStyles.container}>
-        <View style={generalStyles.outter}>
-          <View style={generalStyles.logo}>
-            <Image source={require('../../imgs/markus_logo_bw.png')}/>
+      <View style={{flex: 1}}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={modalStyles.container}>
+            <View>
+              <TextInput style = {[{ 
+                borderLeftColor: 'white',
+                borderRightColor: 'white',
+                borderTopColor: this.state.miQRBorderColor, 
+                borderBottomColor: this.state.miQRBorderColor,
+                borderWidth: 2
+              }, modalStyles.input]}
+                autoCorrect={false}
+                placeholder='QR Code'
+                autoCapitalize='characters'
+                placeholderTextColor='rgba(225,225,225,0.7)'
+                onChangeText = {(text) => this.setState({
+                  miQRCode: text
+                })}
+              />
+              <TextInput style = {[{ 
+                borderLeftColor: 'white',
+                borderRightColor: 'white',
+                borderTopColor: this.state.miStudentNumberBorderColor, 
+                borderBottomColor: this.state.miStudentNumberBorderColor,
+                borderWidth: 2
+              }, modalStyles.input]}
+                autoCorrect={false}
+                placeholder='Student Number'
+                autoCapitalize='characters'
+                placeholderTextColor='rgba(225,225,225,0.7)'
+                onChangeText = {(text) => this.setState({
+                  miStudentNumber: text
+                })}
+              />
+
+              <TouchableOpacity style={modalStyles.buttonContainer}
+                onPress={this.onManualEntry.bind(this)}>
+                <Text style={modalStyles.buttonText}>DONE</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={modalStyles.buttonContainer}
+                onPress={this.toggleModalVisible.bind(this)}>
+                <Text style={modalStyles.buttonText}>HIDE</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={generalStyles.buttonBar}>
-            <View>
-              <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="#A3CB38"/>
+        </Modal>
+
+        <View style={generalStyles.container}>
+          <View style={generalStyles.outter}>
+            <View style={generalStyles.logo}>
+              <Image source={require('../../imgs/markus_logo_bw.png')}/>
             </View>
-            <View>
-              <Button onPress={Actions.InfoEntry} title="New" color="blue"/>
-            </View>
-            <View>
-              <Button onPress={this.onManualEntry.bind(this)} title="Manual" color="#12CBC4"/>
+            <View style={generalStyles.buttonBar}>
+              <View>
+                <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="#A3CB38"/>
+              </View>
+              <View>
+                <Button onPress={Actions.InfoEntry} title="New" color="blue"/>
+              </View>
+              <View>
+                <Button onPress={this.toggleModalVisible.bind(this)} title="Manual" color="#12CBC4"/>
+              </View>
             </View>
           </View>
-        </View>
-        <RNCamera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            style = {generalStyles.preview}
-            onBarCodeRead={this.onBarCodeRead.bind(this)}
-            permissionDialogTitle={'Permission to use camera'}
-            permissionDialogMessage={'We need your permission to use your camera phone'}
-        />
-        {/* Mask around Scanner View */}
-        <View style={maskStyles.maskOutter}>
-          <View style={[{ flex: this.maskRowHeight, width: '100%'}, maskStyles.maskFrame]}/>
-            <View style={[{ flex: 30, flexDirection: 'row' }]}>
-              <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
-              <View style={maskStyles.maskInner}/>
-              <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
+          <RNCamera
+              ref={ref => {
+                this.camera = ref;
+              }}
+              style = {generalStyles.preview}
+              onBarCodeRead={this.onBarCodeRead.bind(this)}
+              permissionDialogTitle={'Permission to use camera'}
+              permissionDialogMessage={'We need your permission to use your camera phone'}
+          />
+          {/* Mask around Scanner View */}
+          <View style={maskStyles.maskOutter}>
+            <View style={[{ flex: this.maskRowHeight, width: '100%'}, maskStyles.maskFrame]}/>
+              <View style={[{ flex: 30, flexDirection: 'row' }]}>
+                <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
+                <View style={maskStyles.maskInner}/>
+                <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
+              </View>
+            <View style={[{ flex: this.maskRowHeight, width: '100%', alignItems: 'center'}, maskStyles.maskFrame]}>
+              <Text style={{color: 'white', marginTop: 20}}> Total: {this.state.infoCounter} </Text>
+              <Text style={generalStyles.label}>{this.state.searchLabel}</Text>
             </View>
-          <View style={[{ flex: this.maskRowHeight, width: '100%', alignItems: 'center'}, maskStyles.maskFrame]}>
-            <Text style={{color: 'white', marginTop: 20}}> Total: {this.state.infoCounter} </Text>
-            <Text style={generalStyles.label}>{this.state.searchLabel}</Text>
           </View>
         </View>
       </View>
