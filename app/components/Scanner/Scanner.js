@@ -60,12 +60,20 @@ export default class Scanner extends Component {
     }
   }
 
+  generateEmailSubject() {
+    
+  }
+
   saveInfoButton(){
     let csvInfo = Object.keys(this.dataStore).map(k => String(k) + ", " + String(this.dataStore[k])).join('\n');
 
+    // Create Email Subject
+    let emailSubject = `(${this.props.courseCode}) ${this.props.title}`
+    emailSubject = this.props.location ? emailSubject + ` at ${this.props.location}` : emailSubject;
+
     let sendMail = path => {
       Mailer.mail({
-        subject: this.props.courseCode + " Exam Version Info",
+        subject: emailSubject,
         recipients: [],
         ccRecipients: [],
         bccRecipients: [],
