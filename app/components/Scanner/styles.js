@@ -20,6 +20,13 @@ export const generalStyles = StyleSheet.create({
       alignSelf: 'center',
       margin: 20
   },
+  input:{
+    height: 40,
+    marginBottom: 10,
+    padding: 10,
+    color: '#000000',
+    backgroundColor: '#ffffff',
+  },
   outter: {
       position: 'absolute',
       top: 0,
@@ -50,6 +57,32 @@ export const generalStyles = StyleSheet.create({
       width: '100%',
       alignItems: 'center',
       marginVertical: 100
+  },
+});
+
+export const modalStyles = StyleSheet.create({
+  container: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: '#e8f4f2',
+      justifyContent: 'center'
+  },
+  input: {
+    height: 40,
+    marginBottom: 10,
+    padding: 10,
+    color: '#000000',
+    backgroundColor: '#ffffff',
+  },
+  buttonContainer:{
+    backgroundColor: '#2980b6',
+    paddingVertical: 15,
+    marginVertical: 5
+  },
+  buttonText:{
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: '700'
   }
 });
   
