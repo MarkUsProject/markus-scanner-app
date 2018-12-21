@@ -4,8 +4,6 @@ import React, { Component } from 'react';
 
 export default class InfoEntry extends Component {
   render() {
-    return (
-      <InfoEntryForm></InfoEntryForm>
-    );
+    return <InfoEntryForm />;
   }
 }

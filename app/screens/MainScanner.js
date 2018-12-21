@@ -1,4 +1,3 @@
-'use strict';
 import Scanner from '../components/Scanner';
 import React, { Component } from 'react';
 

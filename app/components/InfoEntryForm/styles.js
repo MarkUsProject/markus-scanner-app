@@ -7,24 +7,19 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#e8f4f2',
   },
-  logo:{
+  logo: {
     alignItems: 'center',
     marginBottom: 50,
   },
-  input:{
+  input: {
     height: 40,
     marginBottom: 10,
     padding: 10,
     color: '#000000',
     backgroundColor: '#ffffff',
   },
-  buttonContainer:{
+  buttonContainer: {
     backgroundColor: '#2980b6',
     paddingVertical: 15
   },
-  buttonText:{
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: '700'
-  }
 });

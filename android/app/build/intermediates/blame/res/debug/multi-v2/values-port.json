@@ -1,18 +1,11 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/vijaybala/Desktop/markus-scanner-app/MES/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-port/values-port.xml",
+            "outputFile": "C:\\Users\\david\\Documents\\markus-scanner-app\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
             "map": [
                 {
-                    "source": "/Users/vijaybala/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/34fcfc4fdec80d76f8a87416478440a1/res/values-port/values-port.xml",
+                    "source": "C:\\Users\\david\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\84ff7b7bf6726e9eb3216388c2392170\\res\\values-port\\values-port.xml",
                     "from": {
-                        "startLines": "4",
-                        "startColumns": "4",
-                        "startOffsets": "280",
-                        "endColumns": "55",
-                        "endOffsets": "331"
-                    },
-                    "to": {
                         "startLines": "2",
                         "startColumns": "4",
                         "startOffsets": "55",

@@ -1,18 +1,13 @@
-'use strict';
 import React, { Component } from 'react';
 import * as constants from './constants';
-import * as utils from '../../utils';
 import { generalStyles, maskStyles, modalStyles } from './styles';
 import {
   Alert,
   Button,
-  Dimensions,
   Text,
   View,
-  Vibration,
   Image,
   Modal,
-  TouchableOpacity,
   TextInput
 } from 'react-native';
 import Mailer from 'react-native-mail';
@@ -23,212 +18,152 @@ export default class Scanner extends Component {
 
   constructor(props) {
     super(props);
-    const {height, width } = Dimensions.get('window');
-    this.maskRowHeight = Math.round((height - 300) / 19);
-    this.maskColWidth = (width - 300) / 2;
 
     this.state = {
-      previous: null,
-      searchCode: constants.QRCODE_TYPE,
-      searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
+      qrCode: null,
       infoCounter: 0,
       modalVisible: false,
-      miQRBorderColor: constants.DEFAULT_BORDER_COLOR,
-      miStudentNumberBorderColor: constants.DEFAULT_BORDER_COLOR,
-      miQRCode: '',
-      miStudentNumber: ''
+      studentNumber: '',
+      matches: []
     };
     this.dataStore = {};
   }
 
-  onBarCodeRead(data) {
-    this.processCodes(data.type, data.data);
-  }
-
-  toggleModalVisible() {
-    if (this.state.modalVisible) {
-      this.setState({miQRBorderColor: constants.DEFAULT_BORDER_COLOR});
-      this.setState({miStudentNumberBorderColor: constants.DEFAULT_BORDER_COLOR});
+  // Triggered when camera processes a QR code or barcode.
+  onBarCodeRead = (event) => {
+    if (event.type === RNCamera.Constants.BarCodeType.qr) {
+      // Read a new QR code; now need to search for a barcode.
+      this.setState({
+        qrCode: event.data,
+      });
+    } else if (event.type == RNCamera.Constants.BarCodeType.codabar && this.state.qrCode !== null) {
+      // Read a new barcode; store the QR code and barcode mapping.
+      this.addRecord(this.state.qrCode, event.data);
+      this.resetScanner();
     }
-    this.setState({
-      modalVisible: !this.state.modalVisible
-    });
-  }
-
-  resetScanner() {
-    this.setState({
-      previous: null,
-      searchCode: constants.QRCODE_TYPE,
-      searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
-    });
   }
 
   // Adds record to datastore and increments the counter
   addRecord(QRCode, studentNumber) {
     this.dataStore[QRCode] = studentNumber;
     this.setState({
-      infoCounter: this.state.infoCounter + 1
+      infoCounter: this.state.infoCounter + 1,
+      matches: this.state.matches.concat([[QRCode, studentNumber]])
     })
   }
 
-  onManualEntry() {
-    if (!this.state.miQRCode || !this.state.miStudentNumber) {
-      this.setState({
-        miQRBorderColor: this.state.miQRCode ? constants.DEFAULT_BORDER_COLOR : constants.ERROR_BORDER_COLOR,
-        miStudentNumberBorderColor: this.state.miStudentNumber ? constants.DEFAULT_BORDER_COLOR : constants.ERROR_BORDER_COLOR
-      });
-      return;
-    }
-    
-    this.addRecord(this.state.miQRCode, this.state.miStudentNumber);
-    this.resetScanner();
-    this.toggleModalVisible();
+  resetScanner = () => {
+    this.setState({
+      qrCode: null,
+    });
   }
 
-  processCodes(type, code) {
-    if (type == this.state.searchCode && type == constants.QRCODE_TYPE) {
-      this.setState({
-        previous: code,
-        searchCode: constants.BARCODE_TYPE,
-        searchLabel: constants.SEARCH_LABEL_TCARD_CODE
-      });
-      Vibration.vibrate();
-    } else if (type == this.state.searchCode && type == constants.BARCODE_TYPE) {
-      this.addRecord(this.state.previous, code);
-      this.setState({
-        searchCode: constants.QRCODE_TYPE,
-        searchLabel: constants.SEARCH_LABEL_EXAM_CODE,
-        previous: null
-      });
+  // Manual entry modal
+  toggleModalVisible = () => {
+    this.setState({modalVisible: !this.state.modalVisible});
+  }
+
+  onManualEntry = () => {
+    if (this.state.qrCode !== '' && this.state.studentNumber !== '') {
+      this.addRecord(this.state.qrCode, this.state.studentNumber);
+      this.resetScanner();
+      this.toggleModalVisible();
     }
   }
 
-  generateEmailSubject() {
-    
+  saveInfoButton = () => {
+    const csvInfo = Object.keys(this.dataStore).map(k => String(k) + ", " + String(this.dataStore[k])).join('\n');
+
+    const emailSubject = this.getEmailSubject();
+
+    // Creates csv file and calls the sendMail function.
+    Mailer.mail({
+      subject: emailSubject,
+      recipients: [],
+      ccRecipients: [],
+      bccRecipients: [],
+      body: csvInfo,
+      isHTML: false,
+    }, (error, event) => {});
   }
 
-  saveInfoButton(){
-    let csvInfo = Object.keys(this.dataStore).map(k => String(k) + ", " + String(this.dataStore[k])).join('\n');
-
-    // Create Email Subject
-    let emailSubject = `(${this.props.courseCode}) ${this.props.title}`
-    emailSubject = this.props.location ? emailSubject + ` at ${this.props.location}` : emailSubject;
-
-    let sendMail = path => {
-      Mailer.mail({
-        subject: emailSubject,
-        recipients: [],
-        ccRecipients: [],
-        bccRecipients: [],
-        body: '',
-        isHTML: true,
-        attachment: {
-          path: path,
-          type: 'csv',
-          name: 'student_exam_info.csv',
-        }
-      }, (error, event) => {});
-    };
-
-    // creates csv file and calls the sendMail function.
-    utils.createCSV(csvInfo, sendMail);
+  // Helpers for email reports
+  getEmailSubject = () => {
+    let subject = `(${this.props.courseCode}) ${this.props.title}`;
+    if (this.props.location) {
+      subject += ` at ${this.props.location}`
+    }
+    return subject;
   }
 
   render() {
+    const label = this.state.qrCode === null ?
+                  constants.SEARCH_LABEL_EXAM_CODE :
+                  constants.SEARCH_LABEL_TCARD_CODE;
     return (
       <View style={{flex: 1}}>
         <Modal
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
+          onRequestClose={this.toggleModalVisible}>
           <View style={modalStyles.container}>
             <View>
-              <TextInput style = {[{ 
-                borderLeftColor: 'white',
-                borderRightColor: 'white',
-                borderTopColor: this.state.miQRBorderColor, 
-                borderBottomColor: this.state.miQRBorderColor,
-                borderWidth: 2
-              }, modalStyles.input]}
+              <TextInput style = {modalStyles.input}
                 autoCorrect={false}
+                defaultValue={this.state.qrCode || ''}
                 placeholder='QR Code'
                 autoCapitalize='characters'
-                placeholderTextColor='rgba(225,225,225,0.7)'
-                onChangeText = {(text) => this.setState({
-                  miQRCode: text
-                })}
+                onChangeText = {text => this.setState({qrCode: text})}
               />
-              <TextInput style = {[{ 
-                borderLeftColor: 'white',
-                borderRightColor: 'white',
-                borderTopColor: this.state.miStudentNumberBorderColor, 
-                borderBottomColor: this.state.miStudentNumberBorderColor,
-                borderWidth: 2
-              }, modalStyles.input]}
+              <TextInput style = {modalStyles.input}
                 autoCorrect={false}
+                keyboardType='numeric'
                 placeholder='Student Number'
-                autoCapitalize='characters'
-                placeholderTextColor='rgba(225,225,225,0.7)'
-                onChangeText = {(text) => this.setState({
-                  miStudentNumber: text
-                })}
+                onChangeText = {text => this.setState({studentNumber: text})}
               />
 
-              <TouchableOpacity style={modalStyles.buttonContainer}
-                onPress={this.onManualEntry.bind(this)}>
-                <Text style={modalStyles.buttonText}>DONE</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={modalStyles.buttonContainer}
-                onPress={this.toggleModalVisible.bind(this)}>
-                <Text style={modalStyles.buttonText}>HIDE</Text>
-              </TouchableOpacity>
+              <Button
+                style={modalStyles.buttonContainer}
+                onPress={this.onManualEntry}
+                disabled={this.state.qrCode === '' || this.state.studentNumber === ''}
+                title="Record entry"/>
+
+              <Button style={modalStyles.buttonContainer}
+                onPress={this.toggleModalVisible}
+                title="Cancel" />
             </View>
           </View>
         </Modal>
 
         <View style={generalStyles.container}>
-          <View style={generalStyles.outter}>
+          <View style={generalStyles.outer}>
             <View style={generalStyles.logo}>
               <Image source={require('../../imgs/markus_logo_bw.png')}/>
-              { this.state.previous && 
-                <Button onPress={this.resetScanner.bind(this)} title="Reset" color="#d63031"/>
+              { this.state.qrCode &&
+                <Button onPress={this.resetScanner} title="Reset" color="#d63031"/>
               }
             </View>
             <View style={generalStyles.buttonBar}>
-              <View>
-                <Button onPress={this.saveInfoButton.bind(this)} title="Save" color="white"/>
-              </View>
-              <View>
-                <Button onPress={Actions.InfoEntry} title="New" color="white"/>
-              </View>
-              <View>
-                <Button onPress={this.toggleModalVisible.bind(this)} title="Manual" color="white"/>
-              </View>
+                <Button onPress={this.toggleModalVisible} title="Manual" color="#2980b6"/>
+                <Button onPress={this.saveInfoButton} title="Email" color="#2980b6"/>
+                <Button onPress={Actions.infoEntry} title="Reset" color="#2980b6"/>
             </View>
           </View>
           <RNCamera
-              ref={ref => {
-                this.camera = ref;
-              }}
-              style = {generalStyles.preview}
-              onBarCodeRead={this.onBarCodeRead.bind(this)}
-              permissionDialogTitle={'Permission to use camera'}
-              permissionDialogMessage={'We need your permission to use your camera phone'}
+            ref={ref => this.camera = ref}
+            style={generalStyles.preview}
+            onBarCodeRead={this.onBarCodeRead}
+            permissionDialogTitle={'Permission to use camera'}
+            permissionDialogMessage={'We need your permission to use your phone\'s camera.'}
           />
           {/* Mask around Scanner View */}
-          <View style={maskStyles.maskOutter}>
-            <View style={[{ flex: this.maskRowHeight, width: '100%'}, maskStyles.maskFrame]}/>
-              <View style={[{ flex: 30, flexDirection: 'row' }]}>
-                <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
-                <View style={maskStyles.maskInner}/>
-                <View style={[{ width: this.maskColWidth }, maskStyles.maskFrame]} />
-              </View>
-            <View style={[{ flex: this.maskRowHeight, width: '100%', alignItems: 'center'}, maskStyles.maskFrame]}>
-              <Text style={{color: 'white', marginTop: 20}}> Total: {this.state.infoCounter} </Text>
-              <Text style={generalStyles.label}>{this.state.searchLabel}</Text>
+          <View style={maskStyles.maskOuter}>
+            <View style={maskStyles.maskFrame}/>
+            <View style={maskStyles.maskInner}/>
+            <View style={maskStyles.maskFrame}>
+              <Text style={generalStyles.label}>{label}</Text>
+              <Text style={generalStyles.label}>Total: {this.state.matches.length}</Text>
             </View>
           </View>
         </View>

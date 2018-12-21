@@ -3,7 +3,6 @@ package com.mes;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
 import com.chirag.RNMail.RNMail;
 import org.reactnative.camera.RNCameraPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,10 +24,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new RNFSPackage(),
-            new RNMail(),
-            new RNCameraPackage()
+        new MainReactPackage(),
+        new RNMail(),
+        new RNCameraPackage()
       );
     }
 
