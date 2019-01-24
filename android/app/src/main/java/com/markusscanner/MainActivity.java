@@ -1,4 +1,4 @@
-package com.mes;
+package com.markusscanner;
 
 import com.facebook.react.ReactActivity;
 
