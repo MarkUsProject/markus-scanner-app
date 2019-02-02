@@ -1029,10 +1029,6 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-base-64@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
-
 base64-js@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.1.2.tgz#d6400cac1c4c660976d90d07a04351d89395f5e8"
@@ -4161,13 +4157,6 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-fs@^2.13.2:
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.13.2.tgz#78257c5e461d19723b51cc369eb2e161f942676d"
-  dependencies:
-    base-64 "^0.1.0"
-    utf8 "^2.1.1"
-
 react-native-mail@^3.0.6:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.6.tgz#5e7b4a89bcbe2218e44331465596966a7ff743ab"
@@ -5196,10 +5185,6 @@ use@^3.1.0:
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.0.tgz#14716bf03fdfefd03040aef58d8b4b85f3a7c544"
   dependencies:
     kind-of "^6.0.2"
-
-utf8@^2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/utf8/-/utf8-2.1.2.tgz#1fa0d9270e9be850d9b05027f63519bf46457d96"
 
 util-deprecate@~1.0.1:
   version "1.0.2"
