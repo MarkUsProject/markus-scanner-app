@@ -1,4 +1,4 @@
-package com.mes;
+package com.markusscanner;
 
 import android.app.Application;
 
@@ -24,9 +24,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-        new MainReactPackage(),
-        new RNMail(),
-        new RNCameraPackage()
+          new MainReactPackage(),
+            new RNMail(),
+            new RNCameraPackage()
       );
     }
 

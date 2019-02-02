@@ -98,7 +98,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.mes"
+        applicationId "com.markusscanner"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -137,12 +137,10 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-mail')
-    implementation (project(':react-native-camera')) {
-        exclude group: "com.android.support"
-    }
+    compile project(':react-native-mail')
+    compile project(':react-native-camera')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    // compile "com.android.support:appcompat-v7:23.0.1"
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 }
 
