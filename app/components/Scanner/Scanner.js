@@ -13,6 +13,8 @@ import {
 import Mailer from 'react-native-mail';
 import { RNCamera } from 'react-native-camera';
 import { Actions } from 'react-native-router-flux';
+import sha256 from 'crypto-js/sha256';
+
 
 export default class Scanner extends Component {
 
@@ -45,10 +47,12 @@ export default class Scanner extends Component {
 
   // Adds record to datastore and increments the counter
   addRecord(QRCode, studentNumber) {
-    this.dataStore[QRCode] = studentNumber;
+    const truncated = studentNumber.substring(0, studentNumber.length - 2);
+    const hashed = sha256(truncated);
+    this.dataStore[QRCode] = hashed;
     this.setState({
       infoCounter: this.state.infoCounter + 1,
-      matches: this.state.matches.concat([[QRCode, studentNumber]])
+      matches: this.state.matches.concat([[QRCode, hashed]])
     })
   }
 
@@ -72,7 +76,7 @@ export default class Scanner extends Component {
   }
 
   saveInfoButton = () => {
-    const csvInfo = Object.keys(this.dataStore).map(k => String(k) + ", " + String(this.dataStore[k])).join('\n');
+    const csvInfo = Object.keys(this.dataStore).map(k => String(k) + ' ' + String(this.dataStore[k])).join('\n');
 
     const emailSubject = this.getEmailSubject();
 
